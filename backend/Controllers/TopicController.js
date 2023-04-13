@@ -1,3 +1,5 @@
+require("./../modules/TopicsModules")
+
 exports.getAllTopics = function(req,res,next){
     res.status(200).json({message:"list of Topics"})
 }

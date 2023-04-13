@@ -1,8 +1,8 @@
+require("./../modules/AuthorsModules")
+
 exports.getAllAuthors = function(req,res,next){
     res.status(200).json({message:"list of Authors"})
 }
-
-
 
 exports.editAuthor = (req,res,next)=>{
     res.status(200).json({message:"editAuthor"})

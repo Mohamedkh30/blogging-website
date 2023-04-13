@@ -1,15 +1,24 @@
 const express = require("express");
 const morgan = require("morgan");
+const  mongoose = require("mongoose");
+
 const server = express();
 
 const TopicRouter = require("./Routes/TopicRouter")
 const AuthorRouter = require("./Routes/AuthorRouter")
-const AuthenticationRouter = require("./Routes/AuthenticationRouter")
+const AuthenticationRouter = require("./Routes/AuthenticationRouter");
 
-server.listen(8000,()=>{
-    //console.log(server)
-    console.log("server is listening on 8000");
-})
+mongoose.connect("mongodb://127.0.0.1:27017/BlogDB")
+    .then(()=>{
+        console.log("connected to DB")
+        server.listen(8000,()=>{
+            console.log("server is listening on 8000");
+        })
+    })
+    .catch(error=>{
+        console.log("DB problem "+error);
+    })
+
 
 server.use(morgan("tiny"))
 
