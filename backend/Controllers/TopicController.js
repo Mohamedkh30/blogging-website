@@ -39,9 +39,9 @@ exports.getTopic = (req,res,next)=>{
 
 exports.deleteTopic = (req,res,next)=>{
     TopicsSchema.findOne({_id:req.params.id})
-    .then(child=>{
-        if(child==null){
-            throw new Error("teacher not found")
+    .then(topic=>{
+        if(topic==null){
+            throw new Error("topic not found")
         }
         return TopicsSchema.deleteOne({_id:req.params.id})
     })

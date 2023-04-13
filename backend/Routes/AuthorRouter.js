@@ -9,7 +9,7 @@ router.route("/authors")
 
 
 router.route("/author")
-    .patch(AuthorController.editAuthor)
+    .patch(AuthorController.updateAuthor)
 
 router.route("/author/:id")
     .get(AuthorController.getAuthor)
