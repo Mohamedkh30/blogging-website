@@ -19,7 +19,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/BlogDB")
         console.log("DB problem "+error);
     })
 
-
+server.use(express.json())
 server.use(morgan("tiny"))
 
 
