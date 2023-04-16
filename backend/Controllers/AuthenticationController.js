@@ -1,11 +1,34 @@
 const mongoose= require("mongoose")
+const jwt=require("jsonwebtoken")
+const bcrypt = require("bcrypt")
 require("./../modules/AuthorCredentialsModules")
 const AuthorCredentialsSchema = mongoose.model("AuthorCredentials")
 const AuthorsSchema = mongoose.model("Authors")
 
 exports.login = (req,res,next)=>{
-    res.status(200).json({message:"login"})
+    AuthorCredentialsSchema.findOne({email:req.body.email})
+    .then(user=>{
+        if(user==null)
+            throw new Error("Username or password incorrect..")
+
+        bcrypt.compare(req.body.password, user.password, (err, result) => {
+            if (err) {
+                next(err)
+            } else if (result === true) {
+
+                const token=jwt.sign({
+                    id:user.authorId,
+                    role:"Author"
+                },"blog");        
+                res.status(200).json({data:"OK",token})
+            } else {
+                next(new Error("Username or password incorrect.."))
+            } 
+        })
+    })
+    .catch(error=>next(error))
 }
+
 
 exports.addAuthor = (req,res,next)=>{
     let author = new AuthorsSchema({
@@ -16,13 +39,14 @@ exports.addAuthor = (req,res,next)=>{
     })
     author.save()
         .then(data=>{
-            let cred = new AuthorCredentialsSchema({
-                email:req.body.email,
-                password:req.body.password,
-                authorId:data._id
+            bcrypt.hash(req.body.password, 10, function(err, hash) {
+                cred = new AuthorCredentialsSchema({
+                    email:req.body.email,
+                    password:hash,
+                    authorId:data._id
+                })
+                return cred.save()
             })
-
-            return cred.save()
         })
         .then(()=>{
             res.status(201).json({message:"Author created"})
@@ -30,3 +54,4 @@ exports.addAuthor = (req,res,next)=>{
         .catch(error=>next(error))
     
 }
+
