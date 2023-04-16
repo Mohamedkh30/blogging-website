@@ -1,5 +1,6 @@
 const express = require("express")
 const TopicController = require("./../Controllers/TopicController")
+const {checkAuthor} = require("./../middlewares/AuthMW")
 
 const router = express.Router();
 
@@ -7,11 +8,11 @@ router.route("/home")
     .get(TopicController.getAllTopics)
 
 router.route("/topic")
-    .post(TopicController.addTopic)
+    .post(checkAuthor,TopicController.addTopic)
 
 router.route("/topic/:id")
     .get(TopicController.getTopic)
-    .delete(TopicController.deleteTopic)
+    .delete(checkAuthor,TopicController.deleteTopic)
 
 module.exports = router
 

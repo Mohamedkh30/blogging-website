@@ -7,6 +7,7 @@ const server = express();
 const TopicRouter = require("./Routes/TopicRouter")
 const AuthorRouter = require("./Routes/AuthorRouter")
 const AuthenticationRouter = require("./Routes/AuthenticationRouter");
+const AuthMW = require("./middlewares/AuthMW")
 
 mongoose.connect("mongodb://127.0.0.1:27017/BlogDB")
     .then(()=>{
@@ -24,6 +25,7 @@ server.use(morgan("tiny"))
 
 
 server.use(AuthenticationRouter)
+server.use(AuthMW)
 server.use(TopicRouter)
 server.use(AuthorRouter)
 
