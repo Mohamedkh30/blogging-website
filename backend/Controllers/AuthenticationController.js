@@ -39,19 +39,39 @@ exports.addAuthor = (req,res,next)=>{
     })
     author.save()
         .then(data=>{
-            bcrypt.hash(req.body.password, 10, function(err, hash) {
-                cred = new AuthorCredentialsSchema({
-                    email:req.body.email,
-                    password:hash,
-                    authorId:data._id
-                })
-                return cred.save()
-            })
+            return new Promise((resolve, reject) => {
+                let cred;
+                bcrypt.hash(req.body.password, 10, function(err, hash) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        cred = new AuthorCredentialsSchema({
+                        email: req.body.email,
+                        password: hash,
+                        authorId: data._id
+                        });
+                        resolve(cred);
+                    }
+                    
+                });
+                console.log(cred)
+            });
+        })
+        .then(cred=>{
+            //console.log(cred)
+            return cred.save()
         })
         .then(()=>{
             res.status(201).json({message:"Author created"})
         })
-        .catch(error=>next(error))
-    
+        .catch(error=>{
+            AuthorsSchema.deleteOne({
+                name:req.body.name,
+                about:req.body.about,
+                img:req.body.img,
+                topicList:[]
+        }).then(()=>next(error))
+            
+        })
 }
 
