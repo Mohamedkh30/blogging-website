@@ -1,0 +1,15 @@
+<div class="container">
+    <div class="row-cols-12">
+        <div class="d-flex flex-column justify-content-center align-items-center my-3 border border-secondary p-3 rounded-4 border-2">
+            <img src={{author.authorImg}} class="bd-placeholder-img rounded-circle" width="160" height="160">
+            <div class="d-flex flex-column align-items-center ">
+            <h2 class="my-2">{{author.author}}</h2>
+            <p>{{author.authorabout}}</p>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="container" *ngFor="let topic of author.topicList">
+    <app-card [topic]="topic"></app-card>
+</div>
